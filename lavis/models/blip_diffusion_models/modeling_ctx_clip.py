@@ -13,9 +13,12 @@ from transformers.models.clip.configuration_clip import CLIPTextConfig
 from transformers.models.clip.modeling_clip import (
     CLIPEncoder,
     CLIPPreTrainedModel,
-    _expand_mask,
 )
 
+try:
+    from transformers.models.clip.modeling_clip import _expand_mask
+except ImportError:
+    from lavis.models.blip2_models.modeling_llama  import _expand_mask
 
 class CtxCLIPTextModel(CLIPPreTrainedModel):
     config_class = CLIPTextConfig

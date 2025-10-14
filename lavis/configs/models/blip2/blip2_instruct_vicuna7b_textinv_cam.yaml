@@ -9,9 +9,9 @@ model:
   load_pretrained: True
 
   pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/InstructBLIP/instruct_blip_vicuna7b_trimmed.pth"
-  finetuned: "/home/iammingggg/detection/AntifakePrompt/checkpoints/COCO_90k_SD2_SD2IP.pth" # SD2+IP (90k, postfix)
-  # finetuned: "/home/iammingggg/detection/AntifakePrompt/checkpoints/COCO_90k_SD2_SD2IP_lama.pth" # SD2+IP+LaMa (90k, postfix)
-  
+  finetuned: "/home/infres/ziyliu-24/FakeParts2/Detectors/AntifakePrompt/ckpt/COCO_150k_SD3_SD2IP.pth" # SD2+IP (90k, postfix)
+  # finetuned: "/home/infres/ziyliu-24/FakeParts2/Detectors/AntifakePrompt/ckpt/COCO_150k_SD3_SD2IP_lama.pth" # SD2+IP+LaMa (90k, postfix)
+
   # vit encoder
   image_size: 224
   drop_path_rate: 0
@@ -23,7 +23,7 @@ model:
   num_query_token: 32
 
   # path to Vicuna checkpoint
-  llm_model: "/eva_data0/denny/vicuna-7b-v1.3"
+  llm_model: "lmsys/vicuna-7b-v1.5"
 
   # generation configs
   prompt: "Is this photo real [*]?"

@@ -341,8 +341,9 @@ class Blip2VicunaInstructTextinv(Blip2Base):
         input_ids = input_ids - vocab_size # in order to use the trained embedding, shift the token_id
         input_ids[~train_word_mask] = 0 # input_id of pretrained words set to 0
         train_inputs_embeds = self.llm_model.model.train_embed_tokens(input_ids) # turn the pseudo-word into embedding
-        
-        inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask] # Replace the pretrained weight
+
+        # inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask] # Replace the pretrained weight
+        inputs_embeds[train_word_mask] = train_inputs_embeds.to(inputs_embeds.dtype)[train_word_mask]
         # -------------------------------------------------------------- #
         
         inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
@@ -493,8 +494,9 @@ class Blip2VicunaInstructTextinv(Blip2Base):
             input_ids = input_ids - vocab_size
             input_ids[~train_word_mask] = 0
             train_inputs_embeds = self.llm_model.model.train_embed_tokens(input_ids)
-            
-            inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask]
+
+            # inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask]
+            inputs_embeds[train_word_mask] = train_inputs_embeds.to(inputs_embeds.dtype)[train_word_mask]
             
             # NOTE: Below is the same
             
@@ -781,9 +783,9 @@ class Blip2VicunaInstructTextinv(Blip2Base):
                 input_ids = input_ids - vocab_size
                 input_ids[~train_word_mask] = 0
                 train_inputs_embeds = self.llm_model.model.train_embed_tokens(input_ids)
-                
-                inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask]
-                
+                # inputs_embeds[train_word_mask] = train_inputs_embeds[train_word_mask]
+                inputs_embeds[train_word_mask] = train_inputs_embeds.to(inputs_embeds.dtype)[train_word_mask]
+
                 # NOTE: Below is the same
                 
                 inputs_embeds = torch.cat([inputs_llm.repeat_interleave(seg_len, dim=0), inputs_embeds], dim=1)

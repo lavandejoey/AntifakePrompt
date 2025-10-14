@@ -15,17 +15,24 @@ from dataclasses import dataclass
 from typing import Optional, Tuple
 
 import torch
-from torch import Tensor, device
+from torch import Tensor, nn
 import torch.utils.checkpoint
-from torch import nn
 from torch.nn import CrossEntropyLoss
 import torch.nn.functional as F
-from transformers import BatchEncoding, PreTrainedTokenizer
 
+from transformers import BatchEncoding, PreTrainedTokenizer
 from transformers.activations import ACT2FN
-from transformers.file_utils import (
-    ModelOutput,
-)
+
+# --- Version-robust utilities & outputs ---
+
+# ModelOutput moved from transformers.file_utils -> transformers.utils (newer)
+try:
+    from transformers.utils import ModelOutput, logging
+except Exception:
+    from transformers.file_utils import ModelOutput  # old
+    from transformers.utils import logging  # available in most old versions too
+
+# modeling_outputs is stable across versions for these
 from transformers.modeling_outputs import (
     BaseModelOutputWithPastAndCrossAttentions,
     BaseModelOutputWithPoolingAndCrossAttentions,
@@ -37,13 +44,19 @@ from transformers.modeling_outputs import (
     SequenceClassifierOutput,
     TokenClassifierOutput,
 )
-from transformers.modeling_utils import (
-    PreTrainedModel,
-    apply_chunking_to_forward,
-    find_pruneable_heads_and_indices,
-    prune_linear_layer,
-)
-from transformers.utils import logging
+
+# PreTrainedModel stayed in modeling_utils; apply_chunking_to_forward moved to pytorch_utils (newer)
+from transformers.modeling_utils import PreTrainedModel
+
+try:
+    from transformers.pytorch_utils import (
+        apply_chunking_to_forward, find_pruneable_heads_and_indices, prune_linear_layer
+    )
+except ImportError:
+    from transformers.modeling_utils import (
+        apply_chunking_to_forward, find_pruneable_heads_and_indices, prune_linear_layer
+    )
+
 from transformers.models.bert.configuration_bert import BertConfig
 from lavis.common.utils import get_abs_path
 
@@ -752,11 +765,11 @@ class BertModel(BertPreTrainedModel):
             self.encoder.layer[layer].attention.prune_heads(heads)
 
     def get_extended_attention_mask(
-        self,
-        attention_mask: Tensor,
-        input_shape: Tuple[int],
-        device: device,
-        is_decoder: bool,
+            self,
+            attention_mask: Tensor,
+            input_shape: Tuple[int],
+            device: torch.device,
+            is_decoder: bool,
     ) -> Tensor:
         """
         Makes broadcastable attention and causal masks so that future and masked tokens are ignored.

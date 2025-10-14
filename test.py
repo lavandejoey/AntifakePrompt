@@ -213,7 +213,7 @@ def arg_parser():
     parser.add_argument('--fake_dir', type=str, default=None, help='The path to the fake directory.')
     parser.add_argument('--real_label', type=str, default="yes", help='The label for real images.')
     parser.add_argument('--fake_label', type=str, default="no", help='The label for fake images.')
-    parser.add_argument('--log', type=str, default="log/log.txt", help='Path to the log file.')
+    parser.add_argument('--log', type=str, default="logs/log.txt", help='Path to the log file.')
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--model_name', type=str, default='blip2_vicuna_instruct_textinv')
     parser.add_argument('--model_type', type=str, default='vicuna7b')
