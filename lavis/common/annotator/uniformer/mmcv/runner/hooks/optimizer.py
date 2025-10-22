@@ -83,14 +83,14 @@ class GradientCumulativeOptimizerHook(OptimizerHook):
 
     def _init(self, runner):
         if runner.iter % self.cumulative_iters != 0:
-            runner.logger.warning(
+            runner.log.warning(
                 'Resume iter number is not divisible by cumulative_iters in '
                 'GradientCumulativeOptimizerHook, which means the gradient of '
                 'some iters is lost and the result may be influenced slightly.'
             )
 
         if self.has_batch_norm(runner.model) and self.cumulative_iters > 1:
-            runner.logger.warning(
+            runner.log.warning(
                 'GradientCumulativeOptimizerHook may slightly decrease '
                 'performance if the model has BatchNorm layers.')
 
@@ -428,7 +428,7 @@ else:
                 self.copy_params_to_fp16(runner.model, fp32_weights)
             self.loss_scaler.update_scale(has_overflow)
             if has_overflow:
-                runner.logger.warning('Check overflow, downscale loss scale '
+                runner.log.warning('Check overflow, downscale loss scale '
                                       f'to {self.loss_scaler.cur_scale}')
 
             # save state_dict of loss_scaler
@@ -493,7 +493,7 @@ else:
                     # copy fp32 params to the fp16 model
                     self.copy_params_to_fp16(runner.model, fp32_weights)
                 else:
-                    runner.logger.warning(
+                    runner.log.warning(
                         'Check overflow, downscale loss scale '
                         f'to {self.loss_scaler.cur_scale}')
 

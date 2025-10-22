@@ -96,7 +96,7 @@ class TextLoggerHook(LoggerHook):
             # and the last level directory of `runner.work_dir`
             basename = osp.basename(runner.work_dir.rstrip(osp.sep))
             self.out_dir = self.file_client.join_path(self.out_dir, basename)
-            runner.logger.info(
+            runner.log.info(
                 (f'Text logs will be saved to {self.out_dir} by '
                  f'{self.file_client.name} after the training process.'))
 
@@ -123,7 +123,7 @@ class TextLoggerHook(LoggerHook):
             if (self.every_n_iters(runner, self.interval_exp_name)) or (
                     self.by_epoch and self.end_of_epoch(runner)):
                 exp_info = f'Exp name: {runner.meta["exp_name"]}'
-                runner.logger.info(exp_info)
+                runner.log.info(exp_info)
 
         if log_dict['mode'] == 'train':
             if isinstance(log_dict['lr'], dict):
@@ -180,7 +180,7 @@ class TextLoggerHook(LoggerHook):
             log_items.append(f'{name}: {val}')
         log_str += ', '.join(log_items)
 
-        runner.logger.info(log_str)
+        runner.log.info(log_str)
 
     def _dump_log(self, log_dict, runner):
         # dump log in json format
@@ -245,12 +245,12 @@ class TextLoggerHook(LoggerHook):
                 with open(local_filepath, 'r') as f:
                     self.file_client.put_text(f.read(), out_filepath)
 
-                runner.logger.info(
+                runner.log.info(
                     (f'The file {local_filepath} has been uploaded to '
                      f'{out_filepath}.'))
 
                 if not self.keep_local:
                     os.remove(local_filepath)
-                    runner.logger.info(
+                    runner.log.info(
                         (f'{local_filepath} was removed due to the '
                          '`self.keep_local=False`'))

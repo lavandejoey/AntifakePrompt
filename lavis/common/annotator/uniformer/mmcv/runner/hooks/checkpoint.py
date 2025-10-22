@@ -83,7 +83,7 @@ class CheckpointHook(Hook):
             basename = osp.basename(runner.work_dir.rstrip(osp.sep))
             self.out_dir = self.file_client.join_path(self.out_dir, basename)
 
-        runner.logger.info((f'Checkpoints will be saved to {self.out_dir} by '
+        runner.log.info((f'Checkpoints will be saved to {self.out_dir} by '
                             f'{self.file_client.name}.'))
 
         # disable the create_symlink option because some file backends do not
@@ -109,7 +109,7 @@ class CheckpointHook(Hook):
         if self.every_n_epochs(
                 runner, self.interval) or (self.save_last
                                            and self.is_last_epoch(runner)):
-            runner.logger.info(
+            runner.log.info(
                 f'Saving checkpoint at {runner.epoch + 1} epochs')
             if self.sync_buffer:
                 allreduce_params(runner.model.buffers())
@@ -160,7 +160,7 @@ class CheckpointHook(Hook):
         if self.every_n_iters(
                 runner, self.interval) or (self.save_last
                                            and self.is_last_iter(runner)):
-            runner.logger.info(
+            runner.log.info(
                 f'Saving checkpoint at {runner.iter + 1} iterations')
             if self.sync_buffer:
                 allreduce_params(runner.model.buffers())

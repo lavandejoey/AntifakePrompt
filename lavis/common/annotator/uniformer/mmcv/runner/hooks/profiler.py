@@ -160,12 +160,12 @@ class ProfilerHook(Hook):
             with_flops=self.with_flops)
 
         self.profiler.__enter__()
-        runner.logger.info('profiler is profiling...')
+        runner.log.info('profiler is profiling...')
 
     @master_only
     def after_train_epoch(self, runner):
         if self.by_epoch and runner.epoch == self.profile_iters - 1:
-            runner.logger.info('profiler may take a few minutes...')
+            runner.log.info('profiler may take a few minutes...')
             self.profiler.__exit__(None, None, None)
             if self.json_trace_path is not None:
                 self.profiler.export_chrome_trace(self.json_trace_path)
@@ -174,7 +174,7 @@ class ProfilerHook(Hook):
     def after_train_iter(self, runner):
         self.profiler.step()
         if not self.by_epoch and runner.iter == self.profile_iters - 1:
-            runner.logger.info('profiler may take a few minutes...')
+            runner.log.info('profiler may take a few minutes...')
             self.profiler.__exit__(None, None, None)
             if self.json_trace_path is not None:
                 self.profiler.export_chrome_trace(self.json_trace_path)
