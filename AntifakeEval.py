@@ -62,7 +62,7 @@ def parse_args():
     p.add_argument("--pred_csv", type=str, required=True, help="Output CSV path.")
     p.add_argument("--device", type=str, default="cuda")
     p.add_argument("--batch_size", type=int, default=304)
-    p.add_argument("--num_workers", type=int, default=os.cpu_count())
+    p.add_argument("--num_workers", type=int, default=4)
     p.add_argument("--model_name", type=str, default="blip2_vicuna_instruct_textinv")
     p.add_argument("--model_type", type=str, default="vicuna7b")
     return p.parse_args()
