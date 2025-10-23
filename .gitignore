@@ -163,3 +163,5 @@ cache/
 deepfake-detection/log/*
 cam_results
 *.pth
+results/
+logs/

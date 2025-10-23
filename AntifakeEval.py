@@ -40,10 +40,11 @@ class FakePartsV2Dataset(FakePartsV2DatasetBase):
                  csv_path: Optional[Union[str, Path]] = FRAMES_CSV,
                  model_name: str = "AntiFakeVLM",
                  transform=None,
+                 done_csv_list=None,
                  vis_proc=None,
                  on_corrupt: str = "warn",
                  ):
-        super().__init__(data_root=data_root, mode=mode, csv_path=csv_path,
+        super().__init__(data_root=data_root, mode=mode, csv_path=csv_path, done_csv_list=done_csv_list,
                          model_name=model_name, transform=None, on_corrupt=on_corrupt)
         self.vis_proc = vis_proc
 
@@ -59,6 +60,8 @@ def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--data_root", type=str, required=True, help="Dataset root to index.")
     p.add_argument('--data_csv', type=str, default=None, help='csv file indexing the dataset')
+    p.add_argument('--done_csv_list', type=str, nargs='*', default=None,
+                   help='list of csv files with done sample_ids to skip')
     p.add_argument("--pred_csv", type=str, required=True, help="Output CSV path.")
     p.add_argument("--device", type=str, default="cuda")
     p.add_argument("--batch_size", type=int, default=304)
@@ -79,7 +82,8 @@ def main():
     vis_eval = vis_processors.get("eval", None)
 
     # Build dataset/dataloader
-    dataset = FakePartsV2Dataset(args.data_root, vis_proc=vis_eval, csv_path=args.data_csv)
+    dataset = FakePartsV2Dataset(args.data_root, vis_proc=vis_eval, csv_path=args.data_csv,
+                                 done_csv_list=args.done_csv_list, model_name=args.model_name)
     if len(dataset) == 0:
         raise SystemExit(f"No images found under {args.data_root} with extensions {IMG_EXTS}.")
 

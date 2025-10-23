@@ -30,6 +30,7 @@ mkdir -p "${result_dir}"
 data_root="/projects/hi-paris/DeepFakeDataset/FakeParts_data_addition_frames_only"
 #data_root="/home/infres/ziyliu-24/data/FakeParts2DataMock"
 data_entry_csv="/projects/hi-paris/DeepFakeDataset/frames_index.csv"
+done_csv=("results/")
 
 source /home/infres/ziyliu-24/miniconda3/etc/profile.d/conda.sh
 conda activate antifake310
@@ -37,7 +38,9 @@ conda activate antifake310
 srun python3 -Wignore "AntifakeEval.py" \
     --data_root "${data_root}" \
     --pred_csv "${result_dir}/predictions.csv" \
-    --data_csv ${data_entry_csv}
+    --data_csv ${data_entry_csv} \
+    --done_csv_list "${done_csv[@]}"
+
 
 EXIT_CODE=$?
 
